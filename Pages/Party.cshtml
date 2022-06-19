@@ -1,0 +1,63 @@
+@page
+@using PartyPlan.Models
+@model PartyPlan.Pages.PartyModel
+@{
+    ViewData["Title"] = "Party Schedule";
+}
+
+<h1>Schedule A Party! 🎈</h1>
+<form method="post" class="card p-3">
+    <div class="row">
+        <div asp-validation-summary="All"></div>
+    </div>
+    <div class="form-group mb-0 align-middle" style="text-align:center;">
+        <label asp-for="NewParty.Name">Name Of Client</label>
+        <input type="text" asp-for="NewParty.Name" class="mr-5">
+        <label asp-for="NewParty.Type">Type of Party</label>
+        <select asp-for="NewParty.Type" asp-items="Html.GetEnumSelectList<PartyType>()" class="mr-5" ></select>
+        <label asp-for="NewParty.PartySize">Party Size</label>
+        <input asp-for="NewParty.PartySize" class="mr-5" /><br><br>
+        <label asp-for="NewParty.IsGlutenFree">Anyone in the party Gluten Free?</label>
+        <input type="checkbox" asp-for="NewParty.IsGlutenFree" class="mr-5"><br><br>
+        <label asp-for="NewParty.Special">Special Additions</label>
+        <select asp-for="NewParty.Special" asp-items="Html.GetEnumSelectList<SpecialAddition>()" class="mr-5"></select>   
+        <label asp-for="NewParty.Contact">Contact Info - Email Preferred</label>
+        <input type="text" asp-for="NewParty.Contact" class="mr-5">    
+        <p>You will be contacted within three business days by one of our associates.</p><br><br> 
+
+        <button class="btn btn-primary">Add</button>
+    </div>
+</form>
+<table class="table mt-5">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type of Party</th>
+            <th scope="col">Size of the Party</th>
+            <th scope="col">Gluten Free</th>
+            <th scope="col">Special Additions</th>
+            <th scope="col">Contact Info</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    @foreach (var party in Model.parties)
+    {
+        <tr>
+            <td>@party.Name</td>
+            <td>@party.Type</td>
+            <td>@party.PartySize</td>
+            <td>@Model.GlutenFreeText(party)</td>
+            <td>@party.Special</td>
+            <td>@party.Contact</td>
+            <td>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@party.Id">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
